@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="../static/styles/style.css">
+</head>
+<body>
+    <!-- <script src="../static/d3.v7.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <div class="section_1">
+        <div class="header">
+            <div class="logo">KA3 Research</div>
+            
+            <div class="links">
+                <a href="home">Home</a>
+                <a href="about">About Us</a>
+                <a href="documentation">Documentation</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                    Profile
+                </a>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                <a href="login">Login</a>
+                <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                    Sign Up
+                </a>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                    Logout
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="section_3">
+        <div class="container has-text-centered">
+           {% block content %}
+           {% endblock %}
+        </div>
+    </div>
+
+    <div class="section_4">
+        <div class="blue_box">
+            <div class="text">
+                <div class="call">Call to action! It's time!</div>
+                <div class="sign">Sign up for our product by clicking that button right over there!</div>
+            </div>
+            <button type="button">Sign Up</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright <span>&copy;</span> KA3 2025
+    </div>
+</body>
+</html>

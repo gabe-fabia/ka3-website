@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us</title>
+    <link rel="stylesheet" href="../static/styles/style.css">
+</head>
+<body>
+    <div class="section_1">
+        <div class="header">
+            <div class="logo">KA3 Research</div>
+            <div class="links">
+                <a href="home">Home</a>
+                <a href="about">About Us</a>
+                <a href="documentation">Documentation</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                    Profile
+                </a>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                <a href="login">Login</a>
+                <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                    Sign Up
+                </a>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                    Logout
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="about">
+        <div class="title">About Us</div> 
+        <div class="container">
+            <div class="sub-title">Who are we?</div>
+            <div class="description"> 
+                KA3 is a research company dedicated to using data and models that assist in investment decision making.
+            </div>
+        </div> 
+        <div class="container">
+            <div class="sub-title">Why were we founded?</div>
+            <div class="description">We were founded on the idea that there are no outfits out there that give retail investors both macro and micro views of the economy and the markets. Without them, there cannot be a holistic understanding of how they impact investment portfolios.</div>
+        </div>
+        <div class="container">
+            <div class="sub-title">Our Mission</div>    
+            <div class="description">Our mission is to empower retail investors with tools that help them make better and informed decisions.</div>
+        </div>
+    </div>
+
+    <!-- <div class="principals">
+        Separate section about principals of KA3. 
+    </div> -->
+
+    <div class="section_4">
+        <div class="blue_box">
+            <div class="text">
+                <div class="call">Call to action! It's time!</div>
+                <div class="sign">Sign up for our product by clicking that button right over there!</div>
+            </div>
+            <button type="button">Sign Up</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright <span>&copy;</span> KA3 2024
+    </div>
+</body>

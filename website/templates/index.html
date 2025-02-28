@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="../static/styles/style.css">
+</head>
+<body>
+    <!-- <script src="../static/d3.v7.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <div class="section_1">
+        <div class="header">
+            <div class="logo">KA3 Research</div>
+            
+            <div class="links">
+                <a href="home">Home</a>
+                <a href="about">About Us</a>
+                <a href="documentation">Documentation</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                    Profile
+                </a>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                <a href="login">Login</a>
+                <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                    Sign Up
+                </a>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                    Logout
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="hero">  
+                <div class="hero_1">Welcome to KA3 Research</div>
+                <div class="hero_2">Our mission statement is: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+                <!-- <button href="signup" type="button">Sign Up</button> -->
+                <a href="signup" type ="button" class="button">Sign Up</a>
+            </div>
+            <img alt = "placeholder"> 
+        </div>
+    </div>
+
+    <div class="chart_content">
+        <label for="name">Enter a stock ticker (IYW and IXP only):</label>
+        <input type="text" id="ticker_text" name="name"/>
+        <button type="button" id="chart_button" onclick="chart_render()">Render</button>
+        <button type="button" id="destroy_button" onclick="chart_destroy()">Destroy</button>
+        <canvas id="line_chart" width="1200" height="800"></canvas>
+    </div>
+    <script src="../static/chart_script.js"></script>
+
+    <div class="section_2">
+        <div class="title">Some Random Information</div>
+        <div class="items">
+            <div class="box">
+                <img alt = "headshot">
+                <div>some text that is centered and wraps under the image</div>
+            </div>
+            <div class="box">
+                <img alt = "headshot">
+                <div>some text that is centered and wraps under the image</div>
+            </div>
+            <div class="box">
+                <img alt = "headshot">
+                <div>some text that is centered and wraps under the image</div>
+            </div>
+            <div class="box">
+                <img alt = "headshot">
+                <div>some text that is centered and wraps under the image</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section_3">
+        <div class="quote">This is a long quote, its supposed to be centered and italicized.</div>
+        <div class="author">- Gabe, Data Analyst</div>
+    </div>
+
+    <div class="section_4">
+        <div class="blue_box">
+            <div class="text">
+                <div class="call">Call to action! It's time!</div>
+                <div class="sign">Sign up for our product by clicking that button right over there!</div>
+            </div>
+            <!-- <a href="signup" class="button">Sign Up</a> -->
+            <a href="signup" type="button" class="button">Sign Up</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright <span>&copy;</span> KA3 2024
+    </div>
+</body>
+</html>

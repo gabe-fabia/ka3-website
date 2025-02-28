@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us</title>
+    <link rel="stylesheet" href="../static/styles/style.css">
+</head>
+<body>
+    <div class="section_1">
+        <div class="header">
+            <div class="logo">KA3 Research</div>
+            <div class="links">
+                <a href="home">Home</a>
+                <a href="about">About Us</a>
+                <a href="documentation">Documentation</a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">
+                    Profile
+                </a>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                <a href="login">Login</a>
+                <a href="{{ url_for('auth.signup') }}" class="navbar-item">
+                    Sign Up
+                </a>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.logout') }}" class="navbar-item">
+                    Logout
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="section_3">
+        <!-- <div class="title">Placholder, content to be filled in.</div>
+        <div class="quote">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
+        <div class="image">
+
+        </div> -->
+        <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+        <div class='tableauPlaceholder' id='viz1737673843452' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;iS&#47;iSharesUSETFsvsYieldCurve&#47;Dashboard4_1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='iSharesUSETFsvsYieldCurve&#47;Dashboard4_1' /><param name='tabs' value='yes' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;iS&#47;iSharesUSETFsvsYieldCurve&#47;Dashboard4_1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-GB' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1737673843452');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.minWidth='1000px';vizElement.style.maxWidth='100%';vizElement.style.minHeight='850px';vizElement.style.maxHeight=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.minWidth='1000px';vizElement.style.maxWidth='100%';vizElement.style.minHeight='850px';vizElement.style.maxHeight=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.minHeight='750px';vizElement.style.maxHeight=(divElement.offsetWidth*1.77)+'px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+    </div>
+
+    <div class="section_4">
+        <div class="blue_box">
+            <div class="text">
+                <div class="call">Call to action! It's time!</div>
+                <div class="sign">Sign up for our product by clicking that button right over there!</div>
+            </div>
+            <button type="button">Sign Up</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright <span>&copy;</span> KA3 2024
+    </div>
+</body>

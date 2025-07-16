@@ -1,2 +1,3 @@
-# yeild_curve_analysis
-Code components related to analyzing yield curves 
+# yield_curve_analysis
+
+Code components related to analyzing yield curves

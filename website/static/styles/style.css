@@ -132,9 +132,9 @@ a {
     background-color: #E5E7EB;
     display: flex;
     flex-direction: column;
-    padding: 150px 300px;
-    justify-content: center;
-    align-items: end;
+    padding: 100px 200px;
+    justify-content: center, stretch;
+    align-items: center, stretch;
 }
 
 .quote {

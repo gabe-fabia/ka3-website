@@ -7,9 +7,9 @@
 </head>
 <body>
     <!-- <script src="../static/d3.v7.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+     -->
     <div class="section_1">
         <div class="header">
             <div class="logo">KA3 Research</div>
@@ -17,6 +17,7 @@
             <div class="links">
                 <a href="home">Home</a>
                 <a href="about">About Us</a>
+                <a href="data">Data</a>
                 <a href="documentation">Documentation</a>
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('main.profile') }}" class="navbar-item">
@@ -48,14 +49,14 @@
         </div>
     </div>
 
-    <div class="chart_content">
+    <!-- <div class="chart_content">
         <label for="name">Enter a stock ticker (IYW and IXP only):</label>
         <input type="text" id="ticker_text" name="name"/>
         <button type="button" id="chart_button" onclick="chart_render()">Render</button>
         <button type="button" id="destroy_button" onclick="chart_destroy()">Destroy</button>
         <canvas id="line_chart" width="1200" height="800"></canvas>
     </div>
-    <script src="../static/chart_script.js"></script>
+    <script src="../static/chart_script.js"></script> -->
 
     <div class="section_2">
         <div class="title">Some Random Information</div>

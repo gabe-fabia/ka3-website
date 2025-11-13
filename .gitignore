@@ -1,2 +1,4 @@
 *.pyc
 .env
+website/scrape_test.ipynb
+website/testing_graphs.ipynb

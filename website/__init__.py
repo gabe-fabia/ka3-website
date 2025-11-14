@@ -545,9 +545,139 @@ def create_app():
 
         return final_df
 
-    @app.route("/download_template")
+    @app.route("/ticker_request")
+    def form():
+        return render_template("input_form.html")
+
+    @app.route("/download_template", methods=["POST"])
     def download_template():
-        return send_file()
+
+        # print(type(row["Ticker"]), row["Name"], row["Sector"], row["Country"])
+        ticker_0 = request.form["msg"].strip()
+
+        # name = row["Name"]
+        # sector = row["Sector"]
+        # country = row["Country"]
+
+        try:
+            final_df = scraped_yf_df(ticker_0)
+        except KeyError as e:
+            print('I got a KeyError - reason "%s"' % str(e))
+            print("The stock symbol was: %s" % ticker_0)
+            # continue
+
+        ticker = yf.Ticker(ticker_0)
+
+        wb = openpyxl.load_workbook("website/temporary_data/investment_template.xlsx")
+        ws = wb.active
+
+        ws.cell(column=2, row=3, value=ticker_0)
+        # ws.cell(column=2, row=2, value=name)
+        # ws.cell(column=10, row=2, value=sector)
+        # ws.cell(column=15, row=2, value=country)
+
+        def df_to_xl(df_array, row_value):
+            for i, value in enumerate(df_array):
+                ws.cell(column=i + 9, row=row_value, value=value)
+
+        revenue = final_df["Total Revenue"].dropna().array[::-1] / 1000000
+        revenue_row = 14
+        df_to_xl(revenue, revenue_row)
+
+        cost_of_revenue_array = (
+            final_df["Cost Of Revenue"].dropna().array[::-1] / 1000000
+        )
+        cost_of_revenue_row = 18
+        df_to_xl(cost_of_revenue_array, cost_of_revenue_row)
+
+        operating_income_array = (
+            final_df["Operating Income"].dropna().array[::-1] / 1000000
+        )
+        operating_income_row = 20
+        df_to_xl(operating_income_array, operating_income_row)
+
+        diluted_eps_array = final_df["Diluted EPS"].dropna().array[::-1]
+        diluted_eps_row = 24
+        df_to_xl(diluted_eps_array, diluted_eps_row)
+
+        operating_cash_flow_array = (
+            final_df["Operating Cash Flow"].dropna().array[::-1] / 1000000
+        )
+        operating_cash_flow_row = 26
+        df_to_xl(operating_cash_flow_array, operating_cash_flow_row)
+
+        free_cash_flow_array = final_df["Free Cash Flow"].dropna().array[::-1] / 1000000
+        free_cash_flow_row = 29
+        df_to_xl(free_cash_flow_array, free_cash_flow_row)
+
+        long_term_debt_array = final_df["Long Term Debt"].dropna().array[::-1] / 1000000
+        long_term_debt_row = 35
+        df_to_xl(long_term_debt_array, long_term_debt_row)
+
+        stockholders_equity_array = (
+            final_df["Stockholders Equity"].dropna().array[::-1] / 1000000
+        )
+        stockholders_equity_row = 36
+        df_to_xl(stockholders_equity_array, stockholders_equity_row)
+
+        interest_expense_array = (
+            final_df["Interest Expense"].dropna().array[::-1] / 1000000
+        )
+        interest_expense_row = 40
+        df_to_xl(interest_expense_array, interest_expense_row)
+
+        diluted_avg_shares_array = (
+            final_df["Diluted Average Shares"].dropna().array[::-1] / 1000000
+        )
+        diluted_avg_shares_row = 55
+        df_to_xl(diluted_avg_shares_array, diluted_avg_shares_row)
+
+        cash_and_equivalents_array = (
+            final_df["Cash And Cash Equivalents"].dropna().array[::-1] / 1000000
+        )
+        cash_and_equivalents_row = 58
+        df_to_xl(cash_and_equivalents_array, cash_and_equivalents_row)
+
+        dividend_data_5y = ticker.history(period="5y")
+        dividend_data_5y_date_index = dividend_data_5y.reset_index()
+        yearly_dividend_sum = dividend_data_5y_date_index.groupby(
+            dividend_data_5y_date_index["Date"].dt.year
+        )["Dividends"].sum()
+        yearly_dividend_sum.array[-1] = yearly_dividend_sum.array[-1] * (4 / 3)
+        yearly_dividend_sum_final = yearly_dividend_sum.array[1:]
+
+        dividend_per_share_array = yearly_dividend_sum_final
+        dividend_per_share_row = 61
+        df_to_xl(dividend_per_share_array, dividend_per_share_row)
+
+        historical_data_1yr = ticker.history("1y")
+
+        ws.cell(
+            column=13, row=7, value=round(historical_data_1yr["Close"].array[-1], 2)
+        )
+        ws.cell(
+            column=13, row=8, value=round(max(historical_data_1yr["Close"].array), 2)
+        )
+        ws.cell(
+            column=13, row=9, value=round(min(historical_data_1yr["Close"].array), 2)
+        )
+
+        # wb.save(f"templates/KA3 Investment Analysis Template - {ticker_0}.xlsx")
+
+        # Ticker to cell B3
+        # Name to cell B2
+        # Sector to cell J2
+        # Country to cell O2
+        output = io.BytesIO()
+        wb.save(output)
+        output.seek(0)
+
+        return send_file(
+            output,
+            as_attachment=True,
+            download_name=f"{ticker_0}_analysis.xlsx",
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
 
     # @app.route("/data", methods=["GET"])
     # def select_ticker():

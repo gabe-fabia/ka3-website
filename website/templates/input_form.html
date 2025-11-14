@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/download_template" method="POST">
+    <label for="msg">Enter stock ticker to generate an excel file:</label>
+    <input type="text" id="msg" name="msg" required>
+    <button type="submit">Download Excel</button>
+</form>
+{% endblock %}

@@ -1,4 +1,11 @@
-from flask import Flask, jsonify, render_template_string, render_template, request
+from flask import (
+    Flask,
+    jsonify,
+    render_template_string,
+    render_template,
+    request,
+    send_file,
+)
 from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -10,6 +17,11 @@ import plotly.graph_objs as go
 import plotly.offline as pyo
 from sqlalchemy import create_engine
 import datetime
+
+import yfinance as yf
+import openpyxl
+from openpyxl import load_workbook
+import io
 
 import os
 from dotenv import load_dotenv
@@ -406,6 +418,136 @@ def create_app():
         fig = tstep.graph_plotly()
         plot_html = fig.to_html(full_html=False, include_plotlyjs="cdn")
         return render_template("plotly_chart.html", chart_div=plot_html)
+
+    def scraped_yf_df(ticker_str):
+        ticker = yf.Ticker(ticker_str)
+        # ticker.reset_index(inplace = True)
+
+        income_statement = ticker.income_stmt
+
+        financials = ticker.ttm_financials
+        # ttm_revenue = financials.loc["Total Revenue"].T
+        ttm_balance_sheet = ticker.quarterly_balance_sheet.iloc[:, 0:1]
+        balance_sheet = ticker.balancesheet
+        cash_and_equivalents = pd.concat(
+            [
+                ttm_balance_sheet.loc["Cash And Cash Equivalents"],
+                balance_sheet.loc["Cash And Cash Equivalents"],
+            ],
+            ignore_index=True,
+        )
+        # long_term_debt = pd.concat([ttm_balance_sheet.loc['Long Term Debt'], balance_sheet.loc['Long Term Debt']], ignore_index=True)
+        long_term_debt = pd.concat(
+            [
+                ttm_balance_sheet.loc["Long Term Debt And Capital Lease Obligation"],
+                balance_sheet.loc["Long Term Debt And Capital Lease Obligation"],
+            ],
+            ignore_index=True,
+        )
+
+        stockholders_equity = pd.concat(
+            [
+                ttm_balance_sheet.loc["Stockholders Equity"],
+                balance_sheet.loc["Stockholders Equity"],
+            ],
+            ignore_index=True,
+        )
+
+        dates = financials.columns.append(income_statement.columns)
+
+        s1 = financials.loc["Total Revenue"]
+        s2 = income_statement.loc["Total Revenue"]
+        type(pd.concat([s1, s2]))
+        revenue = pd.concat([s1, s2], ignore_index=True)
+
+        cost_of_revenue = pd.concat(
+            [
+                financials.loc["Cost Of Revenue"],
+                income_statement.loc["Cost Of Revenue"],
+            ],
+            ignore_index=True,
+        )
+
+        operating_income = pd.concat(
+            [
+                financials.loc["Operating Income"],
+                income_statement.loc["Operating Income"],
+            ],
+            ignore_index=True,
+        )
+
+        diluted_eps = pd.concat(
+            [financials.loc["Diluted EPS"], income_statement.loc["Diluted EPS"]],
+            ignore_index=True,
+        )
+
+        diluted_avg_shares = pd.concat(
+            [
+                financials.loc["Diluted Average Shares"],
+                income_statement.loc["Diluted Average Shares"],
+            ],
+            ignore_index=True,
+        )
+        interest_expense = pd.concat(
+            [
+                financials.loc["Interest Expense"],
+                income_statement.loc["Interest Expense"],
+            ],
+            ignore_index=True,
+        )
+
+        ttm_cash_flow = ticker.ttm_cash_flow
+        cash_flow = ticker.cash_flow
+
+        operating_cash_flow = pd.concat(
+            [
+                ttm_cash_flow.loc["Operating Cash Flow"],
+                cash_flow.loc["Operating Cash Flow"],
+            ],
+            ignore_index=True,
+        )
+        free_cash_flow = pd.concat(
+            [ttm_cash_flow.loc["Free Cash Flow"], cash_flow.loc["Free Cash Flow"]],
+            ignore_index=True,
+        )
+
+        final_df = pd.DataFrame(
+            columns=[
+                "Date",
+                "Total Revenue",
+                "Cost Of Revenue",
+                "Operating Income",
+                "Diluted EPS",
+                "Diluted Average Shares",
+                "Interest Expense",
+                "Cash And Cash Equivalents",
+                "Long Term Debt",
+                "Stockholders Equity",
+                "Operating Cash Flow",
+                "Free Cash Flow",
+            ]
+        )
+        final_df["Date"] = dates
+
+        final_df["Total Revenue"] = revenue
+        final_df["Cost Of Revenue"] = cost_of_revenue
+        final_df["Operating Income"] = operating_income
+        final_df["Diluted EPS"] = diluted_eps
+        final_df["Diluted Average Shares"] = diluted_avg_shares
+        final_df["Interest Expense"] = interest_expense
+
+        final_df["Cash And Cash Equivalents"] = cash_and_equivalents
+        final_df["Long Term Debt"] = long_term_debt
+        final_df["Stockholders Equity"] = stockholders_equity
+
+        final_df["Operating Cash Flow"] = operating_cash_flow
+        final_df["Free Cash Flow"] = free_cash_flow
+
+        return final_df
+
+    @app.route("/download_template")
+    def download_template():
+        return send_file()
 
     # @app.route("/data", methods=["GET"])
     # def select_ticker():
